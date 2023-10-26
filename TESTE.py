@@ -20,34 +20,32 @@ def salvar_em_csv(lista, nome_arquivo):
             arquivo_csv.write(linha)
 nome_arquivo = "bibli.csv"
 
-
 # 1.3 função ADICIONANDO_LIVRO:
 def adicionando_livro():
-    nome_arquivo = "bibli.csv"
-    cabecalho_ja_escrito = os.path.isfile(nome_arquivo)  # Verifica se o arquivo já existe
-
     while True:
         nome_livro = input('Qual o nome do livro? ')
+        
         autor = input('Quem é o autor? ')
-        categoria = input('Qual a sua categoria? ')
+        
+        categoria = input('Escolha pelo código as seguintes opções: \n[acao] Ação\n[comd] Comédia\n[ficc] Ficção\n[terr] Terror\n[roma] Romance\n[dram] Drama\n Qual categoria escolhida: ')
+        
+        #Tratamento de erro em categoria, caso tenha adicionado algo errado:
+        while True:
+            if categoria == 'acao' or categoria == 'comd' or categoria == 'ficc' or categoria == 'terr' or categoria == 'roma' or categoria == 'dram':
+                print('Categoria adicionada')
+                break
+            else:
+                categoria = input('Digite uma resposta válida: ')
+        
         preco = float(input('Qual o preço do livro? '))
 
-        novo_livro = {'nome': nome_livro, 'autor': autor, 'categoria': categoria, 'preco': preco}
+        novo_livro = {'nome': nome_livro, 'autor': autor,'categoria': categoria,'preco': preco} 
         biblioteca.append(novo_livro)
 
-        # Salvar o livro automaticamente em um arquivo .csv
-        with open(nome_arquivo, 'a') as arquivo_csv:
-            if not cabecalho_ja_escrito:
-                arquivo_csv.write("Nome\tAutor\tCategoria\tPreco\n")
-                cabecalho_ja_escrito = True
-
-            linha = f"{novo_livro['nome']}\t{novo_livro['autor']}\t{novo_livro['categoria']}\t{novo_livro['preco']:.2f}\n"
-            arquivo_csv.write(linha)
-
-        # Pergunta se deseja adicionar mais outro livro:
+        #Pergunta se deseja adicionar mais outro livro:
         pergunta = input('Nat, você deseja adicionar mais algum livro? [S/N] ')
-
-        # Tratamento, caso a resposta fuja do esperado (S ou N):
+        
+        #Tratamento, caso a resposta fuja do esperado (S ou N):
         if pergunta in 'Ss':
             continue
         elif pergunta in 'Nn':
