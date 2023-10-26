@@ -2,7 +2,7 @@ import os
 os.system('cls')
 
 print('  ~' * 9)
-print('     Biblioteca da Nat')
+print('     Biblioteca da Nathália')
 print('  ~' * 9)
 
 # 1.0 Criando a lista 
