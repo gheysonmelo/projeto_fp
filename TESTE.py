@@ -12,11 +12,11 @@ biblioteca = []
 def salvar_em_csv(lista, nome_arquivo):
     with open(nome_arquivo, 'w') as arquivo_csv:
         # Escreve o cabeçalho
-        arquivo_csv.write("Nome\tAutor\tCategoria\tPreco\n")
+        arquivo_csv.write("Nome,Autor,Categoria,Preco\n")
 
         # Escreve os dados
         for livro in lista:
-            linha = f"{livro['nome']}\t{livro['autor']}\t{livro['categoria']}\t{livro['preco']:.2f}\n"
+            linha = f"{livro['nome']},{livro['autor']},{livro['categoria']},{livro['preco']:.2f}\n"
             arquivo_csv.write(linha)
 nome_arquivo = "bibli.csv"
 
@@ -54,6 +54,39 @@ def adicionando_livro():
             while pergunta not in 'SsNn':
                 pergunta = input('Ops... A resposta não é válida. Escreva uma resposta válida: [S/N] ')
 
+#1.5 Fazendo o filtro por categoria
+def filtro_categoria(categoria_escolhida):
+            with open('bibli.csv', 'r') as arquivo:
+                #Linhas lendo e armazenando todas as linhas do arquivo csv
+                linhas = arquivo.readlines()
+
+                #Cabecalho -> Guardando apenas a linhas zero, a do cabeçalho
+                cabecalho = linhas[0].strip().split(',')
+
+                #Guardando em uma lista as linhas seguintes. Cada linha será uma lista dentro da lista DADOS
+                dados = []
+                for linha in linhas[1:]:
+                    valores = linha.strip().split(',')
+                    dados.append(valores)
+
+                #Exibir o cabeçalho e os dados
+                print("Cabeçalho:", cabecalho)
+                
+                
+                print("Dados Categoria:")
+                
+                categoria_encontrada = False
+                
+                for linha in dados:
+                    for categoria in linha:
+                        if categoria == categoria_escolhida:
+                            categoria_encontrada = True
+                            print(linha)
+                            break  #O break, neste caso, é para ele parar de procurar, após achar
+
+                if not categoria_encontrada:
+                    print(f"A categoria '{categoria_escolhida}' não foi encontrada no arquivo CSV.")
+
 #1.1 Criando o menu:
 while True:
     print('Escolha, pelo seu código, as seguintes opções: ')
@@ -61,6 +94,7 @@ while True:
     print('[2] Salvar em arquivo .CSV')
     print('[3] Adicionar livro')
     print('[4] Sair')
+    print('[5] Filtro de livros por categoria')
     
     #A variável será recebida em string, mesmo que seja um número, pois fica mais fácil de fazer seu tratamento.
     escolha = input('O que deseja: ')
@@ -93,6 +127,10 @@ while True:
     #1.4Saindo do programa
     elif escolha == '4':
         break
-
-print()
+    
+    elif escolha == '5':
+        categoria_escolhida = input('Está procurando um livro? \nMe diga a categoria escolhida: ')
+        filtro_categoria(categoria_escolhida)  
+                
+    print()
 print(f"{'Tchauu Até Mais':^30}")
