@@ -8,18 +8,6 @@ print('  ~' * 9)
 # 1.0 Criando a lista 
 biblioteca = []
 
-# 1.2 função SALVANDO_EM_CSV:
-def salvar_em_csv(lista, nome_arquivo):
-    with open(nome_arquivo, 'w') as arquivo_csv:
-        # Escreve o cabeçalho
-        arquivo_csv.write("Nome\tAutor\tCategoria\tPreco\n")
-
-        # Escreve os dados
-        for livro in lista:
-            linha = f"{livro['nome']}\t{livro['autor']}\t{livro['categoria']}\t{livro['preco']:.2f}\n"
-            arquivo_csv.write(linha)
-nome_arquivo = "bibli.csv"
-
 
 # 1.3 função ADICIONANDO_LIVRO:
 def adicionando_livro():
@@ -38,11 +26,12 @@ def adicionando_livro():
         # Salvar o livro automaticamente em um arquivo .csv
         with open(nome_arquivo, 'a') as arquivo_csv:
             if not cabecalho_ja_escrito:
-                arquivo_csv.write("Nome\tAutor\tCategoria\tPreco\n")
+                arquivo_csv.write("Nome,Autor,Categoria,Preco\n")
                 cabecalho_ja_escrito = True
 
-            linha = f"{novo_livro['nome']}\t{novo_livro['autor']}\t{novo_livro['categoria']}\t{novo_livro['preco']:.2f}\n"
+            linha = f"{novo_livro['nome']},{novo_livro['autor']},{novo_livro['categoria']},{novo_livro['preco']:.2f}\n"
             arquivo_csv.write(linha)
+            biblioteca.append(arquivo_csv)
 
         # Pergunta se deseja adicionar mais outro livro:
         pergunta = input('Nat, você deseja adicionar mais algum livro? [S/N] ')
@@ -55,12 +44,34 @@ def adicionando_livro():
         else:
             while pergunta not in 'SsNn':
                 pergunta = input('Ops... A resposta não é válida. Escreva uma resposta válida: [S/N] ')
+nome_arquivo = "bibli.csv"
 
+def atualizar():
+    nome_arquivo='bibli.csv'
+    with open(nome_arquivo, 'w') as arquivo:
+        conteudo=arquivo.read()
+        linhas=conteudo.split('\n')
+        bibli=[linha.split(',') for linha in linhas]
+    while True:
+        print("bibilioteca")
+        for i,linha in enumerate(bibli):
+            print(f'1-)nome do livro,2-)ator,3-)categoria,4-)preço')
+            print(f'{i}: {linha[1:]}')
+        linha=int(input('digite o numero do livro que deseja mudar:'))
+        coluna=int(input('digite a informação que deseja mudar:'))
+        novo=input('digite a nova informação:')
+        bibli[linha][coluna]=novo
+        with open (nome_arquivo, 'w') as arquivo:
+            os.remove(nome_arquivo)
+            arquivo.write(bibli)
+        decisao=input('deseja atualizar mais algum livro [S][N]? ')
+        if decisao in 'Nn':
+            break
 #1.1 Criando o menu:
 while True:
     print('Escolha, pelo seu código, as seguintes opções: ')
     print('[1] Listar livros')
-    print('[2] Salvar em arquivo .CSV')
+    print('[2] Atualizar')
     print('[3] Adicionar livro')
     print('[4] Sair')
     
@@ -84,9 +95,16 @@ while True:
             print()
     #1.2Salvando em arquivo CSV
     elif escolha == '2':
-        salvar_em_csv(biblioteca, nome_arquivo)
-        print(f'Dados salvos no arquivo BIBLI da Nat')
+        atualizar()
+        print()
+        
+        
+        
 
+        
+                
+                
+                      
     #1.3Chamando a função ADICIONANDO_LIVRO:
     elif escolha == '3':
         adicionando_livro()
