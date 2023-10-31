@@ -48,25 +48,58 @@ nome_arquivo = "bibli.csv"
 
 def atualizar():
     nome_arquivo='bibli.csv'
-    with open(nome_arquivo, 'w') as arquivo:
-        conteudo=arquivo.read()
-        linhas=conteudo.split('\n')
-        bibli=[linha.split(',') for linha in linhas]
-    while True:
-        print("bibilioteca")
-        for i,linha in enumerate(bibli):
-            print(f'1-)nome do livro,2-)ator,3-)categoria,4-)preço')
-            print(f'{i}: {linha[1:]}')
-        linha=int(input('digite o numero do livro que deseja mudar:'))
-        coluna=int(input('digite a informação que deseja mudar:'))
-        novo=input('digite a nova informação:')
-        bibli[linha][coluna]=novo
-        with open (nome_arquivo, 'w') as arquivo:
-            os.remove(nome_arquivo)
-            arquivo.write(bibli)
-        decisao=input('deseja atualizar mais algum livro [S][N]? ')
-        if decisao in 'Nn':
-            break
+    with open(nome_arquivo, 'r') as arquivo:
+        linhas=arquivo.readlines()
+        cabexario=linhas[0].strip().split(',')
+        bibli=[]
+        for linha in linhas[1:]:
+            livro=linha.strip().split(',')
+            bibli.append(livro)
+        while True:
+            print(f"{'numeração':^15} {'0-nome':^20} {'1-ator':^20} {'2-categoria':^20} {'3-preço':^20}")
+            print('-'*75)
+            for i,linha in enumerate(bibli):
+                print(f"{i:^15} | {linha[0]:^20} | {linha[1]:20} | {linha[2]:20} | {linha[3]:20}")
+            while True:
+
+                i=int(input('digite o numero do livro que deseja modificar:'))
+                if i<=len(bibli):
+                    c=int(input('digite o numero da informação que deseja mudar:'))
+                    if c<=len(bibli[i]):
+                        break
+                    else:
+                        print('voçê digito um numero invalido, digite 0-nome, 1-ator, 2-categoria, 3-preço!')
+                else:
+                    print('voçê digito um numero que não esta registrado na bibilioteca:')
+        
+            novo_valor=input('digite a nova informação:')
+            bibli[i][c]=novo_valor
+            print(f"{'numeração':^15} {'0-)nome':^20} {'1-)ator':^20} {'2-)categoria':^20} {'3-)preço':^20}")
+            for i,linha in enumerate(bibli):
+                print(f"{i:^15} | {linha[0]:^20} | {linha[1]:20} | {linha[2]:20} | {linha[3]:20}")
+            print('Bibilioteca atualizada!')
+            with open(nome_arquivo, 'w') as arquivo:
+                arquivo.truncate(0)#remove todo o conteudo do arquivo
+                arquivo.write(bibli)#escreve no arquivo 
+            pergunta=input('deseja atualizar mais algum livro[Ss][Nn] ? ')
+            if pergunta in 'Ss':
+                continue
+            elif pergunta in 'Nn':
+                break
+            else:
+                while pergunta not in 'SsNn':
+                    pergunta = input('Ops... A resposta não é válida. Escreva uma resposta válida: [S/N] ')
+
+
+
+        
+        
+
+
+        
+        
+        
+        
 #1.1 Criando o menu:
 while True:
     print('Escolha, pelo seu código, as seguintes opções: ')
@@ -102,9 +135,7 @@ while True:
         
 
         
-                
-                
-                      
+           
     #1.3Chamando a função ADICIONANDO_LIVRO:
     elif escolha == '3':
         adicionando_livro()
