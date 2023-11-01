@@ -1,11 +1,12 @@
 import os
+
 os.system('cls')
 
 print('  ~' * 9)
 print('     Biblioteca do Gheyson')
 print('  ~' * 9)
 
-# 1.0 Criando a lista 
+# 1.0 Criando a lista
 biblioteca = []
 
 # 1.2 função SALVANDO_EM_CSV:
@@ -56,22 +57,32 @@ def adicionando_livro():
             while pergunta not in 'SsNn':
                 pergunta = input('Ops... A resposta não é válida. Escreva uma resposta válida: [S/N] ')
 
-#1.1 Criando o menu:
+# Função para excluir um livro com base no código
+def excluir_livro(codigo):
+    if codigo >= 0 and codigo < len(biblioteca):
+        livro_excluido = biblioteca.pop(codigo)
+        salvar_em_csv(biblioteca, nome_arquivo)
+        print(f'O livro "{livro_excluido["nome"]}" foi excluído.')
+    else:
+        print('Código inválido. Nenhum livro foi excluído.')
+
+# 1.1 Criando o menu:
 while True:
     print('Escolha, pelo seu código, as seguintes opções: ')
     print('[1] Listar livros')
     print('[2] Salvar em arquivo .CSV')
     print('[3] Adicionar livro')
-    print('[4] Sair')
+    print('[4] Deletar livro')
+    print('[5] Sair')
     
-    #A variável será recebida em string, mesmo que seja um número, pois fica mais fácil de fazer seu tratamento.
+    # A variável será recebida em string, mesmo que seja um número, pois fica mais fácil de fazer seu tratamento.
     escolha = input('O que deseja: ')
     
-    #1.1Visualização da biblioteca
+    # 1.1 Visualização da biblioteca
     if escolha == '1':
         if len(biblioteca) < 1:
-                print('Ainda não foi adicionado nenhum livro :(\nAdicione um livro na opção [3]')
-                print()
+            print('Ainda não foi adicionado nenhum livro :(\nAdicione um livro na opção [3]')
+            print()
         else:
             print()
             print('='*150)
@@ -82,18 +93,31 @@ while True:
                 print(f"{codigo:^30}{livro['nome']:^30}{livro['autor']:^30}{livro['preco']:^30}")
             print('='*150)
             print()
-    #1.2Salvando em arquivo CSV
+    # 1.2 Salvando em arquivo CSV
     elif escolha == '2':
         salvar_em_csv(biblioteca, nome_arquivo)
         print(f'Dados salvos no arquivo BIBLI da Nat')
 
-    #1.3Chamando a função ADICIONANDO_LIVRO:
+    # 1.3 Chamando a função ADICIONANDO_LIVRO:
     elif escolha == '3':
         adicionando_livro()
         print()
-    
-    #1.4Saindo do programa
+
+    # 1.4 Deletar livro
     elif escolha == '4':
+        if len(biblioteca) < 1:
+            print('Não há livros para excluir.')
+            print()
+        else:
+            print('Livros disponíveis para exclusão:')
+            for codigo, livro in enumerate(biblioteca):
+                print(f'Código: {codigo}, Livro: {livro["nome"]}')
+            codigo = int(input('Digite o código do livro que deseja excluir: '))
+            excluir_livro(codigo)
+            print()
+
+    # 1.5 Saindo do programa
+    elif escolha == '5':
         break
 
 print()
