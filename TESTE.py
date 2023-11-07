@@ -86,7 +86,7 @@ while True:
         else:
             print()
             print('='*150)
-            print(f"{'Código':^30}{'Livro':^30}{'Autor':^30}{'Preço':^30}")
+            print(f"{'Código':^30}{'Livro':^30}{'Autor':^30}{'Preço':^31}")
             print('-'*150)
 
             for codigo, livro in enumerate(biblioteca):
