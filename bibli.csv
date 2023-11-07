@@ -1,2 +1,6 @@
-Nome	Autor	Categoria	Preco
-Harry Potter 2	J.K.	FICC	30.00
+Nome,Autor,Categoria,Preco
+Harry Potter 2,J.K.,3,30.000
+Harry Potter 3,J.K.,3,30.000
+Harry Potter 4,J.K.,3,30.000
+Harry Potter 5,J.K.,3,30.000
+Harry Potter 7,J.K.,Ficção,30.000
