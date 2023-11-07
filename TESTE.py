@@ -168,4 +168,4 @@ while True:
     elif escolha == '5':
         break
 
-print(f"{'Tchau Até Mais':^30}")
+print(f"{'Tchau até mais':^30}")
