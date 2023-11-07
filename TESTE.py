@@ -16,7 +16,7 @@ def salvar_em_csv(lista, nome_arquivo):
 
         # Escreve os dados
         for livro in lista:
-            linha = f"{livro['nome']},{livro['autor']},{livro['categoria']},{livro['preco']:.2f}\n"
+            linha = f"{livro['nome']},{livro['autor']},{livro['categoria']},{livro['preco']:.3f}\n"
             arquivo_csv.write(linha)
 nome_arquivo = "bibli.csv"
 
