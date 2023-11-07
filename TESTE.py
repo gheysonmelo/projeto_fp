@@ -6,16 +6,17 @@ print('  ~' * 9)
 print('     Biblioteca do Gheyson')
 print('  ~' * 9)
 
-# 1.0 Criando a lista
+# Criando a lista e definindo uma variável para o nome do arquivo
 biblioteca = []
-
 nome_arquivo = "bibli.csv"
 
 # Função para carregar a biblioteca a partir do arquivo CSV
 def carregar_biblioteca():
     try:
+        # Abre o arquivo CSV para leitura
         with open(nome_arquivo, 'r') as arquivo_csv:
             linhas = arquivo_csv.readlines()
+            # 2 porque a primeira linha é o cabeçalho
             if len(linhas) < 2:
                 print('A biblioteca está vazia. Adicione livros na opção [2].')
             else:
@@ -31,9 +32,10 @@ def carregar_biblioteca():
     except FileNotFoundError:
         print(f'O arquivo CSV "{nome_arquivo}" não foi encontrado. Adicione livros na opção [2].')
 
-carregar_biblioteca()  # Chama a função para carregar a biblioteca no início do programa
+# Chama a função para carregar a biblioteca no início do programa
+carregar_biblioteca() 
 
-# 1.2 função SALVANDO_EM_CSV:
+# Função que salva no csv os dados da lista:
 def salvar_em_csv(lista, nome_arquivo):
     with open(nome_arquivo, 'w') as arquivo_csv:
         # Escreve o cabeçalho
@@ -44,7 +46,7 @@ def salvar_em_csv(lista, nome_arquivo):
             linha = f"{livro['nome']},{livro['autor']},{livro['categoria']},{livro['preco']:.3f}\n"
             arquivo_csv.write(linha)
 
-# 1.3 função ADICIONANDO_LIVRO:
+# Função que adiciona um livro na lista:
 def adicionando_livro():
     while True:
         nome_livro = input('Qual o nome do livro? ')
@@ -60,13 +62,12 @@ def adicionando_livro():
             "5": "Romance",
             "6": "Drama"
         }
-        # Tratamento de erro em categoria, caso tenha adicionado algo errado:
         while True:
             if categoria in ['1', '2', '3', '4', '5', '6']:
                 categoria = categoria_dic[categoria]
-                print('Categoria adicionada')
                 break
             else:
+                # Tratamento de erro em categoria, caso tenha adicionado algo errado:
                 categoria = input('Digite uma resposta válida: ')
 
         preco = float(input('Qual o preço do livro? '))
@@ -96,7 +97,7 @@ def excluir_livro(codigo):
     else:
         print('Código inválido. Nenhum livro foi excluído.')
 
-# 1.5 Fazendo o filtro por categoria
+# Fazendo o filtro por categoria
 def filtro_categoria(categoria_escolhida):
     categoria_encontrada = False
     for livro in biblioteca:
@@ -106,7 +107,7 @@ def filtro_categoria(categoria_escolhida):
     if not categoria_encontrada:
         print(f"A categoria '{categoria_escolhida}' não foi encontrada na biblioteca.")
 
-# 1.1 Criando o menu:
+# Criando o menu:
 while True:
     print('Escolha, pelo seu código, as seguintes opções: ')
     print('[1] Listar livros')
@@ -118,7 +119,7 @@ while True:
     # A variável será recebida em string, mesmo que seja um número, pois fica mais fácil de fazer seu tratamento.
     escolha = input('O que deseja: ')
 
-    # 1.1 Visualização da biblioteca
+    # 1 - Visualização da biblioteca
     if escolha == '1':
         if len(biblioteca) < 1:
             print('Ainda não foi adicionado nenhum livro :(\nAdicione um livro na opção [2]')
@@ -134,12 +135,12 @@ while True:
             print('=' * 150)
             print()
 
-    # 1.2 Chamando a função ADICIONANDO_LIVRO:
+    # 2 - Adicionar livro:
     elif escolha == '2':
         adicionando_livro()
         print()
 
-    # 1.3 Deletar livro
+    # 3 - Deletar livro
     elif escolha == '3':
         if len(biblioteca) < 1:
             print('Não há livros para excluir.')
@@ -159,12 +160,12 @@ while True:
             excluir_livro(codigo)
             print()
 
-    # Filtrar por categoria
+    # 4 - Filtrar por categoria
     elif escolha == '4':
         categoria_escolhida = input('Está procurando um livro? \nMe diga a categoria escolhida: ')
         filtro_categoria(categoria_escolhida)
 
-    # 1.5 Saindo do programa
+    # 5 - Sair do programa
     elif escolha == '5':
         break
 
