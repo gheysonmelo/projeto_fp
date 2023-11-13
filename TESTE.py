@@ -88,7 +88,7 @@ def adicionando_livro():
             while pergunta not in 'SsNn':
                 pergunta = input('Ops... A resposta não é válida. Escreva uma resposta válida: [S/N] ')
 
-# Função para excluir um livro com base no código
+# Função para excluir um livro com base no código:
 def excluir_livro(codigo):
     if codigo >= 0 and codigo < len(biblioteca):
         livro_excluído = biblioteca.pop(codigo)
@@ -96,6 +96,7 @@ def excluir_livro(codigo):
         print(f'O livro "{livro_excluído["nome"]}" foi excluído.')
     else:
         print('Código inválido. Nenhum livro foi excluído.')
+
 
 # Fazendo o filtro por categoria
 def filtro_categoria(categoria_escolhida):
@@ -107,6 +108,33 @@ def filtro_categoria(categoria_escolhida):
     if not categoria_encontrada:
         print(f"A categoria '{categoria_escolhida}' não foi encontrada na biblioteca.")
 
+# Função para exibir o extrato dos preços:
+def exibir_extrato(nome_arquivo):
+        with open(nome_arquivo, 'r') as arquivo_csv:
+            linhas = arquivo_csv.readlines() #linhas = lista que contêm as linhas do arquivo CSV
+
+            if len(linhas) > 1:
+                print("\nExtrato dos preços:\n")
+                print("=" * 50)
+                print("Livro\t\t\tPreço")
+                print("-" * 50)
+
+                preco_total = 0 
+                
+                #linha = string que contém uma linha do arquivo CSV
+                for linha in linhas[1:]:
+                    dados = linha.strip().split(',') #dados = lista que resulta da divisão (split)
+                    nome_livro = dados[0] # dados [0] = nome do livro ... dados [3] = preço do livro
+                    preco = float(dados[3]) 
+                    preco_total += preco
+                    print(f"{nome_livro}\t\tR$ {preco:.2f}")
+
+                print("-" * 50)
+                print(f"Total de livros: {len(linhas) - 1}")
+                print(f"Soma dos preços: R$ {preco_total:.2f}")
+            else:
+                print("\nAinda não foi adicionado nenhum livro :( Adicione livros na opção [3].\n")
+
 # Criando o menu:
 while True:
     print('Escolha, pelo seu código, as seguintes opções: ')
@@ -114,7 +142,8 @@ while True:
     print('[2] Adicionar livro')
     print('[3] Deletar livro')
     print('[4] Filtro de livros por categoria')
-    print('[5] Sair')
+    print('[5] Exibir extrato')
+    print('[6] Sair')
 
     # A variável será recebida em string, mesmo que seja um número, pois fica mais fácil de fazer seu tratamento.
     escolha = input('O que deseja: ')
@@ -167,6 +196,11 @@ while True:
 
     # 5 - Sair do programa
     elif escolha == '5':
+        exibir_extrato("bibli.csv")
+        print()
+
+    # 6 - Saindo do programa
+    elif escolha == '6':
         break
 
 print(f"{'Tchau até mais':^30}")
