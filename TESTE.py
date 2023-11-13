@@ -1,5 +1,4 @@
 import os
-import time
 
 os.system('cls')
 
@@ -47,6 +46,18 @@ def salvar_em_csv(lista, nome_arquivo):
             linha = f"{livro['nome']},{livro['autor']},{livro['categoria']},{livro['preco']:.3f}\n"
             arquivo_csv.write(linha)
 
+# Listar a biblioteca:
+def visualizar_biblioteca():
+        print()
+        print('=' * 150)
+        print(f"{'Código':^30}{'Livro':^30}{'Autor':^30}{'Preço':^30}{'Categoria':^30}")
+        print('-' * 150)
+
+        for codigo, livro in enumerate(biblioteca):
+            print(f"{codigo:^30}{livro['nome']:^30}{livro['autor']:^30}{livro['preco']:^30}{livro['categoria']:^30}")
+        print('=' * 150)
+        print()
+
 # Função que adiciona um livro na lista:
 def adicionando_livro():
     while True:
@@ -91,15 +102,25 @@ def adicionando_livro():
 
 # Função para excluir um livro com base no código:
 def excluir_livro(codigo):
+
     if codigo >= 0 and codigo < len(biblioteca):
         livro_excluído = biblioteca.pop(codigo)
         salvar_em_csv(biblioteca, nome_arquivo)
         print(f'O livro "{livro_excluído["nome"]}" foi excluído.')
+                
     else:
         print('Código inválido. Nenhum livro foi excluído.')
 
 # Função de filtragem
 def filtros():
+    print('Dê uma olhadinha geral, fica mais fácil de se lembrar :)')
+    print()
+    if len(biblioteca) < 1:
+            print('Ainda não foi adicionado nenhum livro :(\nAdicione um livro na opção [2]')
+            print()
+    else:
+        visualizar_biblioteca()
+    
     while True:
         print('Escolha, pelo código, as seguintes opções: ')
         print('[1] Filtrar pelo nome')
@@ -108,7 +129,7 @@ def filtros():
         print('[4] Filtrar pelo preço\n')
 
         # A variável será recebida em string, mesmo que seja um número, pois fica mais fácil de fazer seu tratamento.
-        escolha = input('')
+        escolha = input('Insira o código do filtro desejado: ')
 
         # 1 - Filtrar pelo nome
         if escolha == '1':
@@ -131,7 +152,7 @@ def filtros():
             print('[4] Terror')
             print('[5] Romance')
             print('[6] Drama\n')
-            categoria_escolhida = input('')
+            categoria_escolhida = input('Pelo código, qual a categoria escolhida para filtrar: ')
             
             if categoria_escolhida == '1':
                 categoria_escolhida = 'Ação'
@@ -254,19 +275,7 @@ while True:
 
     # 1 - Visualização da biblioteca
     if escolha == '1':
-        if len(biblioteca) < 1:
-            print('Ainda não foi adicionado nenhum livro :(\nAdicione um livro na opção [2]')
-            print()
-        else:
-            print()
-            print('=' * 150)
-            print(f"{'Código':^30}{'Livro':^30}{'Autor':^30}{'Preço':^30}{'Categoria':^30}")
-            print('-' * 150)
-
-            for codigo, livro in enumerate(biblioteca):
-                print(f"{codigo:^30}{livro['nome']:^30}{livro['autor']:^30}{livro['preco']:^30}{livro['categoria']:^30}")
-            print('=' * 150)
-            print()
+        visualizar_biblioteca()
 
     # 2 - Adicionar livro:
     elif escolha == '2':
@@ -279,17 +288,20 @@ while True:
             print('Não há livros para excluir.')
             print()
         else:
+            print()
             print('Livros disponíveis para exclusão:')
             print()
-            print('=' * 150)
-            print(f"{'Código':^30}{'Livro':^30}{'Autor':^30}{'Preço':^30}{'Categoria':^30}")
-            print('-' * 150)
+            
+            visualizar_biblioteca()
 
-            for codigo, livro in enumerate(biblioteca):
-                print(f"{codigo:^30}{livro['nome']:^30}{livro['autor']:^30}{livro['preco']:^30}{livro['categoria']:^30}")
-            print('=' * 150)
-            print()
-            codigo = int(input('Digite o código do livro que deseja excluir: '))
+            while True: # Tratamento de erro: Opção não inteiro
+
+                try:
+                    codigo = int(input('Digite o código do livro que deseja excluir: '))
+                    break
+                except ValueError:
+                    print("Entrada inválida. Por favor, insira um valor numérico válido.")
+                    
             excluir_livro(codigo)
             print()
 
@@ -308,7 +320,5 @@ while True:
         break
 
 print(f"{'Tchau até mais':^30}")
-# esperar 3 segundos
-time.sleep(3)
 
 os.system('cls')
