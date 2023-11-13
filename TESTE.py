@@ -31,9 +31,10 @@ def carregar_biblioteca():
     except FileNotFoundError:
         print(f'O arquivo CSV "{nome_arquivo}" não foi encontrado. Adicione livros na opção [2].')
 
-carregar_biblioteca()  # Chama a função para carregar a biblioteca no início do programa
+# Chama a função para carregar a biblioteca no início do programa
+carregar_biblioteca()  
 
-# 1.2 função SALVANDO_EM_CSV:
+# Função que salva no csv os dados da lista:
 def salvar_em_csv(lista, nome_arquivo):
     with open(nome_arquivo, 'w') as arquivo_csv:
         # Escreve o cabeçalho
@@ -44,7 +45,7 @@ def salvar_em_csv(lista, nome_arquivo):
             linha = f"{livro['nome']},{livro['autor']},{livro['categoria']},{livro['preco']:.3f}\n"
             arquivo_csv.write(linha)
 
-# 1.3 função ADICIONANDO_LIVRO:
+# Função que adiciona um livro na lista:
 def adicionando_livro():
     while True:
         nome_livro = input('Qual o nome do livro? ')
@@ -87,7 +88,7 @@ def adicionando_livro():
             while pergunta not in 'SsNn':
                 pergunta = input('Ops... A resposta não é válida. Escreva uma resposta válida: [S/N] ')
 
-# 1.4 Função para excluir um livro com base no código
+# Função para excluir um livro com base no código:
 def excluir_livro(codigo):
     if codigo >= 0 and codigo < len(biblioteca):
         livro_excluído = biblioteca.pop(codigo)
@@ -96,7 +97,7 @@ def excluir_livro(codigo):
     else:
         print('Código inválido. Nenhum livro foi excluído.')
 
-# 1.5 Fazendo o filtro por categoria
+# Fazendo o filtro por categoria:
 def filtro_categoria(categoria_escolhida):
     categoria_encontrada = False
     for livro in biblioteca:
@@ -106,7 +107,7 @@ def filtro_categoria(categoria_escolhida):
     if not categoria_encontrada:
         print(f"A categoria '{categoria_escolhida}' não foi encontrada na biblioteca.")
 
-# 1.6 função EXIBIR_EXTRATO:
+# Função para exibir o extrato dos preços:
 def exibir_extrato(nome_arquivo):
         with open(nome_arquivo, 'r') as arquivo_csv:
             linhas = arquivo_csv.readlines() #linhas = lista que contêm as linhas do arquivo CSV
@@ -134,7 +135,7 @@ def exibir_extrato(nome_arquivo):
                 print("\nAinda não foi adicionado nenhum livro :( Adicione livros na opção [3].\n")
 
 
-# 1.1 Criando o menu:
+# Criando o menu:
 while True:
     print('Escolha, pelo seu código, as seguintes opções: ')
     print('[1] Listar livros')
