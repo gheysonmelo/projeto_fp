@@ -46,6 +46,18 @@ def salvar_em_csv(lista, nome_arquivo):
             linha = f"{livro['nome']},{livro['autor']},{livro['categoria']},{livro['preco']:.3f}\n"
             arquivo_csv.write(linha)
 
+# Listar a biblioteca:
+def visualizar_biblioteca():
+        print()
+        print('=' * 150)
+        print(f"{'Código':^30}{'Livro':^30}{'Autor':^30}{'Preço':^30}{'Categoria':^30}")
+        print('-' * 150)
+
+        for codigo, livro in enumerate(biblioteca):
+            print(f"{codigo:^30}{livro['nome']:^30}{livro['autor']:^30}{livro['preco']:^30}{livro['categoria']:^30}")
+        print('=' * 150)
+        print()
+
 # Função que adiciona um livro na lista:
 def adicionando_livro():
     while True:
@@ -53,7 +65,7 @@ def adicionando_livro():
 
         autor = input('Quem é o autor? ')
 
-        categoria = input('Escolha pelo código as seguintes opções: \n[1] Ação\n[2] Comédia\n[3] Ficção\n[4] Terror\n[5] Romance\n[6] Drama\n Qual categoria escolhida: ')
+        categoria = input('Escolha pelo código as seguintes opções: \n[1] Ação\n[2] Comédia\n[3] Ficção\n[4] Terror\n[5] Romance\n[6] Drama\nQual categoria escolhida: ')
         categoria_dic = {
             "1": "Ação",
             "2": "Comédia",
@@ -70,7 +82,12 @@ def adicionando_livro():
                 # Tratamento de erro em categoria, caso tenha adicionado algo errado:
                 categoria = input('Digite uma resposta válida: ')
 
-        preco = float(input('Qual o preço do livro? '))
+        while True:
+            try:
+                preco = float(input('Qual o preço do livro? R$'))
+                break
+            except ValueError:
+                print('Precisamos de um valor numérico para o preço ')
 
         novo_livro = {'nome': nome_livro, 'autor': autor, 'categoria': categoria, 'preco': preco}
         biblioteca.append(novo_livro)
@@ -80,33 +97,152 @@ def adicionando_livro():
         pergunta = input('Nat, você deseja adicionar mais algum livro? [S/N] ')
 
         # Tratamento, caso a resposta fuja do esperado (S ou N):
-        if pergunta in 'Ss':
+        # Tratamento para garantir uma resposta válida:
+        while pergunta.lower() not in ['s', 'n']:
+            pergunta = input('Ops... A resposta não é válida. Escreva uma resposta válida: [S/N] ')
+
+            if pergunta.lower() in ['s', 'n']:
+                break
+
+        if pergunta.lower() == 's':
             continue
-        elif pergunta in 'Nn':
+        elif pergunta.lower() == 'n':
             break
-        else:
-            while pergunta not in 'SsNn':
-                pergunta = input('Ops... A resposta não é válida. Escreva uma resposta válida: [S/N] ')
+            
+        
 
 # Função para excluir um livro com base no código:
 def excluir_livro(codigo):
+
     if codigo >= 0 and codigo < len(biblioteca):
         livro_excluído = biblioteca.pop(codigo)
         salvar_em_csv(biblioteca, nome_arquivo)
         print(f'O livro "{livro_excluído["nome"]}" foi excluído.')
+                
     else:
         print('Código inválido. Nenhum livro foi excluído.')
 
+# Função de filtragem
+def filtros():
+    print('Dê uma olhadinha geral, fica mais fácil de se lembrar :)')
+    print()
+    if len(biblioteca) < 1:
+            print('Ainda não foi adicionado nenhum livro :(\nAdicione um livro na opção [2]')
+            print()
+    else:
+        visualizar_biblioteca()
+    
+    while True:
+        print('Escolha, pelo código, as seguintes opções: ')
+        print('[1] Filtrar pelo nome')
+        print('[2] Filtrar pelo autor')
+        print('[3] Filtrar pela categoria')
+        print('[4] Filtrar pelo preço\n')
 
-# Fazendo o filtro por categoria
+        # A variável será recebida em string, mesmo que seja um número, pois fica mais fácil de fazer seu tratamento.
+        escolha = input('Insira o código do filtro desejado: ')
+
+        # 1 - Filtrar pelo nome
+        if escolha == '1':
+            nome_escolhido = input('\nDigite o nome do livro que você está procurando: ')
+            filtro_nome(nome_escolhido)
+            break
+
+        # 2 - Filtrar pelo autor
+        elif escolha == '2':
+            autor_escolhido = input('\nDigite o nome do autor do livro que você está procurando: ')
+            filtro_autor(autor_escolhido)
+            break
+
+        # 3 - Filtrar pela categoria
+        elif escolha == '3':
+            print('Escolha, pelo código, a categoria de livro que você deseja procurar: ')
+            print('[1] Ação')
+            print('[2] Comédia')
+            print('[3] Ficção')
+            print('[4] Terror')
+            print('[5] Romance')
+            print('[6] Drama\n')
+            categoria_escolhida = input('Pelo código, qual a categoria escolhida para filtrar: ')
+            
+            if categoria_escolhida == '1':
+                categoria_escolhida = 'Ação'
+            elif categoria_escolhida == '2':
+                categoria_escolhida = 'Comédia'
+            elif categoria_escolhida == '3':
+                categoria_escolhida = 'Ficção'
+            elif categoria_escolhida == '4':
+                categoria_escolhida = 'Terror'
+            elif categoria_escolhida == '5':
+                categoria_escolhida = 'Romance'
+            elif categoria_escolhida == '6':
+                categoria_escolhida = 'Drama'
+            else:
+                # Tratamento de erro em categoria, caso tenha adicionado algo errado:
+                while categoria_escolhida not in ['1', '2', '3', '4', '5', '6']:
+                    categoria_escolhida = input('Ops... A resposta não é válida. Escreva uma resposta válida: ')
+            
+            filtro_categoria(categoria_escolhida)
+            break
+
+        # 4 - Filtrar pelo preço
+        elif escolha == '4':
+            preco_escolhido = float(input('Qual o preço do livro que você está procurando? R$ '))
+            filtro_preco(preco_escolhido)
+            break
+
+#  Filtro pelo nome
+def filtro_nome(nome_escolhido):
+    nome_encontrado = False
+    print(f"{'Livro':^30}{'Autor':^30}{'Preço':^30}{'Categoria':^30}")
+    print('=' * 150)
+    for livro in biblioteca:
+        if nome_escolhido.lower() in livro['nome'].lower():
+            nome_encontrado = True
+            print(f"{livro['nome']:^30}{livro['autor']:^30}{livro['preco']:^30}{livro['categoria']:^30}")
+    if not nome_encontrado:
+        print(f"Nenhum livro contendo '{nome_escolhido}' foi encontrado na biblioteca.")
+    print('=' * 150)
+
+#  Filtro pelo autor
+def filtro_autor(autor_escolhido):
+    autor_encontrado = False
+    print(f"{'Livro':^30}{'Autor':^30}{'Preço':^30}{'Categoria':^30}")
+    print('=' * 150)
+    for livro in biblioteca:
+        if autor_escolhido.lower() in livro['autor'].lower():
+            autor_encontrado = True
+            print(f"{livro['nome']:^30}{livro['autor']:^30}{livro['preco']:^30}{livro['categoria']:^30}")
+    if not autor_encontrado:
+        print(f"Nenhum livro com o autor '{autor_escolhido}' foi encontrado na biblioteca.")
+    print('=' * 150)
+
+#  Filtro por categoria
 def filtro_categoria(categoria_escolhida):
     categoria_encontrada = False
+    print(f"{'Livro':^30}{'Autor':^30}{'Preço':^30}{'Categoria':^30}")
+    print('=' * 150)
     for livro in biblioteca:
         if livro['categoria'] == categoria_escolhida:
             categoria_encontrada = True
-            print(f"Nome: {livro['nome']}, Autor: {livro['autor']}, Preço: {livro['preco']:.3f}")
+            print(f"{livro['nome']:^30}{livro['autor']:^30}{livro['preco']:^30}{livro['categoria']:^30}")
     if not categoria_encontrada:
         print(f"A categoria '{categoria_escolhida}' não foi encontrada na biblioteca.")
+    print('-' * 150)
+
+# Filtro por preço
+def filtro_preco(preco_escolhido):
+    preco_encontrado = False
+    print(f"{'Livro':^30}{'Autor':^30}{'Preço':^30}{'Categoria':^30}")
+    print('=' * 150)
+    print("Livros com o preço escolhido: ")
+    for livro in biblioteca:
+        if livro['preco'] == preco_escolhido:
+            preco_encontrado = True
+            print(f"{livro['nome']:^30}{livro['autor']:^30}{livro['preco']:^30}{livro['categoria']:^30}")
+    if not preco_encontrado:
+        print(f"Nenhum livro com o preço {preco_escolhido} R$ foi encontrado na biblioteca.")
+    print('=' * 150)
 
 # Função para exibir o extrato dos preços:
 def exibir_extrato(nome_arquivo):
@@ -141,7 +277,7 @@ while True:
     print('[1] Listar livros')
     print('[2] Adicionar livro')
     print('[3] Deletar livro')
-    print('[4] Filtro de livros por categoria')
+    print('[4] Filtro de listagem de livros')
     print('[5] Exibir extrato')
     print('[6] Sair')
 
@@ -150,19 +286,7 @@ while True:
 
     # 1 - Visualização da biblioteca
     if escolha == '1':
-        if len(biblioteca) < 1:
-            print('Ainda não foi adicionado nenhum livro :(\nAdicione um livro na opção [2]')
-            print()
-        else:
-            print()
-            print('=' * 150)
-            print(f"{'Código':^30}{'Livro':^30}{'Autor':^30}{'Preço':^30}{'Categoria':^30}")
-            print('-' * 150)
-
-            for codigo, livro in enumerate(biblioteca):
-                print(f"{codigo:^30}{livro['nome']:^30}{livro['autor']:^30}{livro['preco']:^30}{livro['categoria']:^30}")
-            print('=' * 150)
-            print()
+        visualizar_biblioteca()
 
     # 2 - Adicionar livro:
     elif escolha == '2':
@@ -175,26 +299,29 @@ while True:
             print('Não há livros para excluir.')
             print()
         else:
+            print()
             print('Livros disponíveis para exclusão:')
             print()
-            print('=' * 150)
-            print(f"{'Código':^30}{'Livro':^30}{'Autor':^30}{'Preço':^30}{'Categoria':^30}")
-            print('-' * 150)
+            
+            visualizar_biblioteca()
 
-            for codigo, livro in enumerate(biblioteca):
-                print(f"{codigo:^30}{livro['nome']:^30}{livro['autor']:^30}{livro['preco']:^30}{livro['categoria']:^30}")
-            print('=' * 150)
-            print()
-            codigo = int(input('Digite o código do livro que deseja excluir: '))
+            while True: # Tratamento de erro: Opção não inteiro
+
+                try:
+                    codigo = int(input('Digite o código do livro que deseja excluir: '))
+                    break
+                except ValueError:
+                    print("Entrada inválida. Por favor, insira um valor numérico válido.")
+                    
             excluir_livro(codigo)
             print()
 
     # 4 - Filtrar por categoria
     elif escolha == '4':
-        categoria_escolhida = input('Está procurando um livro? \nMe diga a categoria escolhida: ')
-        filtro_categoria(categoria_escolhida)
+        filtros()
+        print()
 
-    # 5 - Sair do programa
+    # 5 - Exibir Extrato
     elif escolha == '5':
         exibir_extrato("bibli.csv")
         print()
@@ -204,3 +331,5 @@ while True:
         break
 
 print(f"{'Tchau até mais':^30}")
+
+os.system('cls')
