@@ -65,7 +65,7 @@ def adicionando_livro():
 
         autor = input('Quem é o autor? ')
 
-        categoria = input('Escolha pelo código as seguintes opções: \n[1] Ação\n[2] Comédia\n[3] Ficção\n[4] Terror\n[5] Romance\n[6] Drama\n Qual categoria escolhida: ')
+        categoria = input('Escolha pelo código as seguintes opções: \n[1] Ação\n[2] Comédia\n[3] Ficção\n[4] Terror\n[5] Romance\n[6] Drama\nQual categoria escolhida: ')
         categoria_dic = {
             "1": "Ação",
             "2": "Comédia",
@@ -82,7 +82,12 @@ def adicionando_livro():
                 # Tratamento de erro em categoria, caso tenha adicionado algo errado:
                 categoria = input('Digite uma resposta válida: ')
 
-        preco = float(input('Qual o preço do livro? '))
+        while True:
+            try:
+                preco = float(input('Qual o preço do livro? R$'))
+                break
+            except ValueError:
+                print('Precisamos de um valor numérico para o preço ')
 
         novo_livro = {'nome': nome_livro, 'autor': autor, 'categoria': categoria, 'preco': preco}
         biblioteca.append(novo_livro)
@@ -92,13 +97,19 @@ def adicionando_livro():
         pergunta = input('Nat, você deseja adicionar mais algum livro? [S/N] ')
 
         # Tratamento, caso a resposta fuja do esperado (S ou N):
-        if pergunta in 'Ss':
+        # Tratamento para garantir uma resposta válida:
+        while pergunta.lower() not in ['s', 'n']:
+            pergunta = input('Ops... A resposta não é válida. Escreva uma resposta válida: [S/N] ')
+
+            if pergunta.lower() in ['s', 'n']:
+                break
+
+        if pergunta.lower() == 's':
             continue
-        elif pergunta in 'Nn':
+        elif pergunta.lower() == 'n':
             break
-        else:
-            while pergunta not in 'SsNn':
-                pergunta = input('Ops... A resposta não é válida. Escreva uma resposta válida: [S/N] ')
+            
+        
 
 # Função para excluir um livro com base no código:
 def excluir_livro(codigo):
