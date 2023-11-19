@@ -1,4 +1,5 @@
 import os
+import time
 
 os.system('cls')
 
@@ -109,8 +110,66 @@ def adicionando_livro():
         elif pergunta.lower() == 'n':
             break
             
-        
+# Função que atualiza um livro na lista:
+def atualizar_livro(codigo):
+    if codigo >= 0 and codigo < len(biblioteca):
+        print(f"{'Livro':^30}{'Autor':^30}{'Preço':^30}{'Categoria':^30}")
+        print('=' * 150)
+        print(f"{biblioteca[codigo]['nome']:^30}{biblioteca[codigo]['autor']:^30}{biblioteca[codigo]['preco']:^30}{biblioteca[codigo]['categoria']:^30}")
+        print('=' * 150)
+        print()
 
+        while True:
+            nome_livro = input('Qual o nome do livro? ')
+
+            autor = input('Quem é o autor? ')
+
+            categoria = input('Escolha pelo código as seguintes opções: \n[1] Ação\n[2] Comédia\n[3] Ficção\n[4] Terror\n[5] Romance\n[6] Drama\nQual categoria escolhida: ')
+            categoria_dic = {
+                "1": "Ação",
+                "2": "Comédia",
+                "3": "Ficção",
+                "4": "Terror",
+                "5": "Romance",
+                "6": "Drama"
+            }
+            while True:
+                if categoria in ['1', '2', '3', '4', '5', '6']:
+                    categoria = categoria_dic[categoria]
+                    break
+                else:
+                    # Tratamento de erro em categoria, caso tenha adicionado algo errado:
+                    categoria = input('Digite uma resposta válida: ')
+
+            while True:
+                try:
+                    preco = float(input('Qual o preço do livro? R$'))
+                    break
+                except ValueError:
+                    print('Precisamos de um valor numérico para o preço ')
+
+            novo_livro = {'nome': nome_livro, 'autor': autor, 'categoria': categoria, 'preco': preco}
+            biblioteca[codigo] = novo_livro
+            salvar_em_csv(biblioteca, nome_arquivo)
+
+            # Pergunta se deseja adicionar mais outro livro:
+            pergunta = input('Nat, você deseja atualizar mais algum livro? [S/N] ')
+
+            # Tratamento, caso a resposta fuja do esperado (S ou N):
+            # Tratamento para garantir uma resposta válida:
+            while pergunta.lower() not in ['s', 'n']:
+                pergunta = input('Ops... A resposta não é válida. Escreva uma resposta válida: [S/N] ')
+
+                if pergunta.lower() in ['s', 'n']:
+                    break
+            
+            if pergunta.lower() == 's':
+                continue
+            elif pergunta.lower() == 'n':
+                break
+    else:
+        print('Código inválido. Nenhum livro foi atualizado.')
+        
 # Função para excluir um livro com base no código:
 def excluir_livro(codigo):
 
@@ -277,9 +336,10 @@ while True:
     print('[1] Listar livros')
     print('[2] Adicionar livro')
     print('[3] Deletar livro')
-    print('[4] Filtro de listagem de livros')
-    print('[5] Exibir extrato')
-    print('[6] Sair')
+    print('[4] Atualizar livro')
+    print('[5] Filtro de listagem de livros')
+    print('[6] Exibir extrato')
+    print('[7] Sair')
 
     # A variável será recebida em string, mesmo que seja um número, pois fica mais fácil de fazer seu tratamento.
     escolha = input('O que deseja: ')
@@ -316,20 +376,45 @@ while True:
             excluir_livro(codigo)
             print()
 
-    # 4 - Filtrar por categoria
+    # 4 - Atualizar livro
     elif escolha == '4':
+        if len(biblioteca) < 1:
+            print('Não há livros para atualizar.')
+            print()
+        else:
+            print()
+            print('Livros disponíveis para atualização:')
+            print()
+            
+            visualizar_biblioteca()
+
+            while True: # Tratamento de erro: Opção não inteiro
+
+                try:
+                    codigo = int(input('Digite o código do livro que deseja atualizar: '))
+                    break
+                except ValueError:
+                    print("Entrada inválida. Por favor, insira um valor numérico válido.")
+                    
+            atualizar_livro(codigo)
+            print()
+
+    # 4 - Filtrar por categoria
+    elif escolha == '5':
         filtros()
         print()
 
     # 5 - Exibir Extrato
-    elif escolha == '5':
+    elif escolha == '6':
         exibir_extrato("bibli.csv")
         print()
 
     # 6 - Saindo do programa
-    elif escolha == '6':
+    elif escolha == '7':
         break
 
 print(f"{'Tchau até mais':^30}")
+# esperar 3 segundos
+time.sleep(3)
 
 os.system('cls')
