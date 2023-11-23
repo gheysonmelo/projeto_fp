@@ -4,7 +4,7 @@ import time
 os.system('cls')
 
 print('  ~' * 9)
-print('     Biblioteca do Gheyson')
+print('     Biblioteca da Nathália')
 print('  ~' * 9)
 
 # Criando a lista e definindo uma variável para o nome do arquivo
@@ -413,7 +413,6 @@ while True:
     elif escolha == '7':
         break
 
-print(f"{'Tchau até mais':^30}")
 # esperar 3 segundos
 time.sleep(3)
 
