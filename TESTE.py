@@ -328,7 +328,7 @@ def exibir_extrato(nome_arquivo):
                 print(f"Total de livros: {len(linhas) - 1}")
                 print(f"Soma dos preços: R$ {preco_total:.2f}")
             else:
-                print("\nAinda não foi adicionado nenhum livro :( Adicione livros na opção [3].\n")
+                print("\nAinda não foi adicionado nenhum livro :( Adicione livros na opção [2].\n")
 
 # Criando o menu:
 while True:
